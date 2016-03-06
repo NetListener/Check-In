@@ -5,6 +5,10 @@ import com.example.kermit.check_in.model.bean.XLocation;
 /**
  * Created by kermit on 16/3/6.
  */
+
+/**
+ * 用经纬度计算两点距离
+ */
 public class DistanceProvider {
 
     private static double DEF_PI = 3.14159265359; // PI

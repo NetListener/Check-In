@@ -5,6 +5,11 @@ import cn.bmob.v3.BmobObject;
 /**
  * Created by kermit on 16/3/6.
  */
+
+/**
+ * 用于封装位置信息
+ * 之前没好好看Bmob文档,发现Bmob支持Google的GeoPoint,后期将会替换
+ */
 public class XLocation extends BmobObject{
 
     private double lontitude;

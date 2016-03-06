@@ -15,16 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.kermit.check_in.model.TeacherModel;
 import com.example.kermit.check_in.model.bean.Teacher;
 import com.example.kermit.check_in.model.bean.XLocation;
 
-import cn.bmob.v3.listener.SaveListener;
-
 /**
  * Created by kermit on 16/3/4.
+ */
+
+/**
+ * 此碎片用来获取教室位置
+ * 发送签到信息
  */
 public class TeacherFragment extends Fragment {
 
@@ -48,7 +50,6 @@ public class TeacherFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mLocationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        mXLocation = new XLocation();
     }
 
     @Nullable
@@ -64,18 +65,7 @@ public class TeacherFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 TeacherModel.getInstance().setTeacher(new Teacher());
-                TeacherModel.getInstance()
-                        .sendMessage("请签到!", mXLocation, new SaveListener() {
-                            @Override
-                            public void onSuccess() {
-                                Toast.makeText(getContext(), "消息发送成功!", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onFailure(int i, String s) {
-                                Toast.makeText(getContext(), "消息发送失败!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                TeacherModel.getInstance().sendMessage("请签到!", mXLocation);
             }
         });
 
@@ -96,6 +86,7 @@ public class TeacherFragment extends Fragment {
             @Override
             public void onLocationChanged(Location location) {
                 if (location != null){
+                    mXLocation = new XLocation();
                     mXLocation.setLatitude(location.getLatitude());
                     mXLocation.setLontitude(location.getLongitude());
                     mButton.setEnabled(true);

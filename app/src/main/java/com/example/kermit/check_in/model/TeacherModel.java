@@ -2,6 +2,8 @@ package com.example.kermit.check_in.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.example.kermit.check_in.App;
 import com.example.kermit.check_in.model.bean.Message;
@@ -19,6 +21,7 @@ public class TeacherModel {
 
     private Teacher mTeacher;
     private Context mContext;
+    private Message mMessage;
 
     private TeacherModel(){
         mContext = App.getInstance();
@@ -40,18 +43,34 @@ public class TeacherModel {
         mTeacher = teacher;
     }
 
-    public void sendMessage(String msg, XLocation xLocation, final SaveListener saveListener){
-        final Message mMessage = new Message();
+    public void sendMessage(final String msg, XLocation xLocation){
+
+        if (TextUtils.isEmpty(msg) || xLocation == null){
+            return;
+        }
+
+        mMessage = new Message();
         mMessage.setMsg(msg);
         mMessage.setXLocation(xLocation);
         xLocation.save(mContext, new SaveListener() {
             @Override
             public void onSuccess() {
+                Toast.makeText(mContext, "Hello!", Toast.LENGTH_SHORT).show();
                 mMessage.save(mContext, new SaveListener() {
                     @Override
                     public void onSuccess() {
                         mTeacher.setMessage(mMessage);
-                        mTeacher.save(mContext, saveListener);
+                        mTeacher.save(mContext, new SaveListener() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(mContext, "消息发送成功!", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(int i, String s) {
+                                Toast.makeText(mContext, "消息发送失败!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                     @Override
                     public void onFailure(int i, String s) {
@@ -60,6 +79,7 @@ public class TeacherModel {
             }
             @Override
             public void onFailure(int i, String s) {
+                Toast.makeText(mContext, "正在定位哦~", Toast.LENGTH_SHORT).show();
             }
         });
     }

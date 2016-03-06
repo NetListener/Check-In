@@ -1,5 +1,6 @@
 package com.example.kermit.check_in.model;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.kermit.check_in.App;
@@ -12,10 +13,11 @@ import cn.bmob.v3.listener.SaveListener;
 /**
  * Created by kermit on 16/3/6.
  */
-public class StudentModel {
+public class StudentModel{
+
+    public static final String TAG = "StudentModel";
 
     private Student mStudent;
-
     private StudentModel(){}
 
     static class SingletonHolder{
@@ -34,15 +36,30 @@ public class StudentModel {
         mStudent = student;
     }
 
-    public void sign(XLocation location1, XLocation location2){
+    /**
+     * 签到
+     * @param sLocation
+     */
+    public void sign(XLocation sLocation){
+
+        mStudent = new Student();
 
         if (mStudent.isSign()){
             return;
         }
 
-        if (location1 != null && location2 != null) {
-            if (DistanceProvider.getDistance(location1, location2) < 100) {
+        if (sLocation == null){
+            Log.d(TAG, "sLocation is null!");
+        }
+
+        if (mXLocationTeacher == null){
+            Log.d(TAG, "mXLocationTeacher is null!");
+        }
+
+        if (sLocation != null && mXLocationTeacher != null) {
+            if (DistanceProvider.getDistance(sLocation, mXLocationTeacher) < 200) {
                 mStudent.setSign(true);
+                Toast.makeText(App.getInstance(), "签到成功!", Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(App.getInstance(), "请快去上课~", Toast.LENGTH_SHORT).show();
             }
@@ -55,5 +72,16 @@ public class StudentModel {
 
     public void save(SaveListener listener){
         mStudent.save(App.getInstance(), listener);
+    }
+
+
+    XLocation mXLocationTeacher;
+
+    /**
+     * 用来从Message中获得位置信息
+     * @param xLocation
+     */
+    public void getXLocation(XLocation xLocation) {
+        mXLocationTeacher = xLocation;
     }
 }

@@ -20,14 +20,13 @@ import com.example.kermit.check_in.model.StudentModel;
 import com.example.kermit.check_in.model.bean.Student;
 import com.example.kermit.check_in.model.bean.XLocation;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import cn.bmob.v3.BmobRealTimeData;
-import cn.bmob.v3.listener.ValueEventListener;
-
 /**
  * Created by kermit on 16/3/4.
+ */
+
+/**
+ * 此碎片用来获取学生的位置
+ * 接受签到信息
  */
 public class StudentFragment extends Fragment {
 
@@ -35,8 +34,7 @@ public class StudentFragment extends Fragment {
 
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
-    private BmobRealTimeData mBmobRealTimeData;
-    private XLocation mXLocationS, xLocation;
+    private XLocation mXLocationS;
 
     private Button mButton;
 
@@ -50,7 +48,6 @@ public class StudentFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBmobRealTimeData = new BmobRealTimeData();
         mLocationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationListener() {
             @Override
@@ -86,7 +83,7 @@ public class StudentFragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StudentModel.getInstance().sign(xLocation, mXLocationS);
+                StudentModel.getInstance().sign(mXLocationS);
             }
         });
 
@@ -104,28 +101,8 @@ public class StudentFragment extends Fragment {
 
         mLocationManager.requestLocationUpdates(Config.LOCATION_PROVIDER, 0, 0, mLocationListener);
 
-        MessageModel.getInstance().start(mBmobRealTimeData, new ValueEventListener() {
-            @Override
-            public void onConnectCompleted() {
-                if (mBmobRealTimeData.isConnected()){
-                    mBmobRealTimeData.subTableUpdate(Config.TableName.XLOCATION);
-                }
-            }
-
-            @Override
-            public void onDataChange(JSONObject jsonObject) {
-                if (mBmobRealTimeData.ACTION_UPDATETABLE.equals(jsonObject.opt("action"))){
-                    JSONObject data = jsonObject.optJSONObject("data");
-                    try {
-                        xLocation =
-                                new XLocation(data.getDouble("lontitude"), data.getDouble("latitude"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
+        //开始监听数据变化
+        MessageModel.getInstance().startListenDataChange();
     }
 }
 

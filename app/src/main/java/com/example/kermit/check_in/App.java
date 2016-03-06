@@ -5,6 +5,10 @@ import android.app.Application;
 /**
  * Created by kermit on 16/3/6.
  */
+
+/**
+ * 提供全局ApplicationContext
+ */
 public class App extends Application{
 
     private static Application instance;

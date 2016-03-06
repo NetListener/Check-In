@@ -6,6 +6,10 @@ import cn.bmob.v3.BmobObject;
 /**
  * Created by kermit on 16/3/6.
  */
+
+/**
+ * 将位置封装进签到信息中
+ */
 public class Message extends BmobObject{
 
     private String msg;
