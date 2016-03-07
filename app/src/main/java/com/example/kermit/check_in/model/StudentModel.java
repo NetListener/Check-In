@@ -1,6 +1,7 @@
 package com.example.kermit.check_in.model;
 
 import android.util.Log;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import com.example.kermit.check_in.App;
@@ -44,10 +45,6 @@ public class StudentModel{
 
         mStudent = new Student();
 
-        if (mStudent.isSign()){
-            return;
-        }
-
         if (sLocation == null){
             Log.d(TAG, "sLocation is null!");
         }
@@ -57,7 +54,8 @@ public class StudentModel{
         }
 
         if (sLocation != null && mXLocationTeacher != null) {
-            if (DistanceProvider.getDistance(sLocation, mXLocationTeacher) < 200) {
+            Toast.makeText(App.getInstance(), DistanceProvider.getDistance(sLocation, mXLocationTeacher).toString(), Toast.LENGTH_SHORT).show();
+            if (DistanceProvider.getDistance(sLocation, mXLocationTeacher) < 250) {
                 mStudent.setSign(true);
                 Toast.makeText(App.getInstance(), "签到成功!", Toast.LENGTH_SHORT).show();
             }else{
