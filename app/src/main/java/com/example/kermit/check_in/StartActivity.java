@@ -12,7 +12,7 @@ public class StartActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        Bmob.initialize(this, Config.APPLICATION_ID);
+        Bmob.initialize(this, Config.THIRDPART_KEY.APPLICATION_ID);
 
 
         StartFragment startFragment = StartFragment.newInstace();
