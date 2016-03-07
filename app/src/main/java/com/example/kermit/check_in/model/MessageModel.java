@@ -1,6 +1,7 @@
 package com.example.kermit.check_in.model;
 
 import android.content.Context;
+import android.widget.Button;
 
 import com.example.kermit.check_in.App;
 import com.example.kermit.check_in.Config;
@@ -47,7 +48,7 @@ public class MessageModel {
     /**
      * 监听位置表的信息变化
      */
-    public void startListenDataChange(){
+    public void startListenDataChange(final Button button){
 
         mBmobRealTimeData.start(mContext, new ValueEventListener() {
             @Override
@@ -65,6 +66,10 @@ public class MessageModel {
                     try {
                         XLocation xLocation =
                                 new XLocation(data.getDouble("lontitude"), data.getDouble("latitude"));
+
+                        if (xLocation != null){
+                            button.setEnabled(true);
+                        }
 
                         StudentModel.getInstance().getXLocation(xLocation);
 
