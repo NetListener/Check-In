@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.kermit.check_in.model.MessageModel;
 import com.example.kermit.check_in.model.StudentModel;
@@ -37,6 +38,8 @@ public class StudentFragment extends Fragment {
     private XLocation mXLocationS;
 
     private Button mButton;
+    private TextView mTextViewLontitude, mTextViewLatitude;
+
 
     public static StudentFragment newInstance() {
 
@@ -53,6 +56,7 @@ public class StudentFragment extends Fragment {
             @Override
             public void onLocationChanged(Location location) {
                 if (location != null) {
+                    showLocation(location);
                     mXLocationS = new XLocation(location.getLongitude(), location.getLatitude());
                 }
             }
@@ -79,7 +83,12 @@ public class StudentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student, container, false);
+
+        mTextViewLatitude = (TextView) view.findViewById(R.id.tv_fragment_student_latitude);
+        mTextViewLontitude = (TextView) view.findViewById(R.id.tv_fragment_student_longtitude);
+
         mButton = (Button) view.findViewById(R.id.btn_get);
+        mButton.setEnabled(false);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,15 +103,20 @@ public class StudentFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        MessageModel.getInstance().startListenDataChange(mButton);
+
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
         mLocationManager.requestLocationUpdates(Config.LOCATION_PROVIDER, 0, 0, mLocationListener);
-
         //开始监听数据变化
-        MessageModel.getInstance().startListenDataChange();
+    }
+
+    private void showLocation(Location location) {
+        mTextViewLontitude.setText(String.valueOf(location.getLongitude()));
+        mTextViewLatitude.setText(String.valueOf(location.getLatitude()));
     }
 }
 
