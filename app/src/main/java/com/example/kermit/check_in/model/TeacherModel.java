@@ -55,7 +55,6 @@ public class TeacherModel {
         xLocation.save(mContext, new SaveListener() {
             @Override
             public void onSuccess() {
-                Toast.makeText(mContext, "Hello!", Toast.LENGTH_SHORT).show();
                 mMessage.save(mContext, new SaveListener() {
                     @Override
                     public void onSuccess() {
