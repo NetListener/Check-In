@@ -54,7 +54,7 @@ public class StudentModel{
         }
 
         if (sLocation != null && mXLocationTeacher != null) {
-            Toast.makeText(App.getInstance(), DistanceProvider.getDistance(sLocation, mXLocationTeacher).toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(App.getInstance(), String.valueOf(DistanceProvider.getDistance(sLocation, mXLocationTeacher)), Toast.LENGTH_SHORT).show();
             if (DistanceProvider.getDistance(sLocation, mXLocationTeacher) < 250) {
                 mStudent.setSign(true);
                 Toast.makeText(App.getInstance(), "签到成功!", Toast.LENGTH_SHORT).show();

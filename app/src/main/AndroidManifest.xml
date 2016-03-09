@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="44b459bab9ceb96c5c87c7ae2e143d45">//开发者申请的key
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="bbe5290dd3d96801975b85d002a82275">//开发者申请的key
         </meta-data>
 
         <activity android:name=".StartActivity">

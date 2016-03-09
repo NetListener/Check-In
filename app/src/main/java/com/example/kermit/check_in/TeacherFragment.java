@@ -96,6 +96,12 @@ public class TeacherFragment extends Fragment {
         mLocationOption.setInterval(0);
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         //启动定位
 
         mLocationClient.setLocationListener(mLocationListener);
