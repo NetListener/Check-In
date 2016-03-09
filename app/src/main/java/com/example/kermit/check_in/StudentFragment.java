@@ -7,6 +7,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.LocationManagerBase;
 import com.example.kermit.check_in.model.MessageModel;
 import com.example.kermit.check_in.model.StudentModel;
 import com.example.kermit.check_in.model.bean.Student;
@@ -33,16 +40,25 @@ public class StudentFragment extends Fragment {
 
     public static final String TAG = "StudentFragment";
 
-    private LocationManager mLocationManager;
-    private LocationListener mLocationListener;
     private XLocation mXLocationS;
+
+    private AMapLocationClient mLocationClient;
+    private AMapLocationListener mLocationListener;
+    private AMapLocationClientOption mLocationOption;
 
     private Button mButton;
     private TextView mTextViewLontitude, mTextViewLatitude;
 
+    public Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            mXLocationS = (XLocation) msg.obj;
+            showLocation(mXLocationS);
+        }
+    };
 
     public static StudentFragment newInstance() {
-
         StudentFragment studentFragment = new StudentFragment();
         return studentFragment;
     }
@@ -51,31 +67,35 @@ public class StudentFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLocationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        mLocationListener = new LocationListener() {
+        mLocationClient = new AMapLocationClient(getContext().getApplicationContext());
+        mLocationListener = new AMapLocationListener() {
             @Override
-            public void onLocationChanged(Location location) {
-                if (location != null) {
-                    showLocation(location);
-                    mXLocationS = new XLocation(location.getLongitude(), location.getLatitude());
-                }
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                Message message = mHandler.obtainMessage();
+                mXLocationS = new XLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude());
+                message.obj =  mXLocationS;
+                message.sendToTarget();
             }
         };
+
+        mLocationOption = new AMapLocationClientOption();
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //设置是否只定位一次,默认为false
+        mLocationOption.setOnceLocation(false);
+        //设置是否强制刷新WIFI，默认为强制刷新
+        mLocationOption.setWifiActiveScan(true);
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(0);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.setLocationListener(mLocationListener);
+        mLocationClient.startLocation();
+
         StudentModel.getInstance().setStudent(new Student());
     }
 
@@ -110,12 +130,10 @@ public class StudentFragment extends Fragment {
             return;
         }
 
-        mLocationManager.requestLocationUpdates(Config.LOCATION_PROVIDER, 0, 0, mLocationListener);
-        //开始监听数据变化
     }
 
-    private void showLocation(Location location) {
-        mTextViewLontitude.setText(String.valueOf(location.getLongitude()));
+    private void showLocation(XLocation location) {
+        mTextViewLontitude.setText(String.valueOf(location.getLontitude()));
         mTextViewLatitude.setText(String.valueOf(location.getLatitude()));
     }
 }

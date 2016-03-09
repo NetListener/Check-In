@@ -11,37 +11,28 @@ import com.example.kermit.check_in.model.bean.XLocation;
  */
 public class DistanceProvider {
 
-    private static double DEF_PI = 3.14159265359; // PI
     private static double DEF_R = 6370693.5; // radius of earth
 
     private DistanceProvider(){}
 
     public static Double getDistance(XLocation location1, XLocation location2){
 
-        double lontitude1, lontitude2, latitude1, latitude2;
+        double latitude1, latitude2;
         double distance;
-
-        lontitude1 = location1.getLontitude();
-        lontitude2 = location2.getLontitude();
 
         latitude1 = location1.getLatitude();
         latitude2 = location2.getLatitude();
 
-        double radlat1 = rad(latitude1);
-        double radlat2 = rad(latitude2);
-        double a = rad(latitude1) - rad(latitude2);
-        double b = rad(lontitude1) - rad(lontitude2);
+        double dLat = Math.toRadians(latitude2 - latitude1);
+        double dLng = Math.toRadians(latitude2 - latitude1);
 
-        distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2), 2) +
-        Math.cos(radlat1) * Math.cos(radlat2) * Math.pow(Math.sin(b/2), 2)));
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(latitude1)) * Math.cos(Math.toRadians(latitude2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
 
-        distance = distance * DEF_R;
-        distance = Math.round(distance * 10000)/10000;
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        distance = DEF_R * c;
 
         return distance;
-    }
-
-    public static double rad(double m){
-        return m * DEF_PI / 180;
     }
 }
