@@ -1,6 +1,6 @@
 package com.example.kermit.check_in.utils;
 
-import com.example.kermit.check_in.model.bean.XLocation;
+import com.example.kermit.check_in.model.bean.CustomLocation;
 
 /**
  * Created by kermit on 16/3/6.
@@ -15,7 +15,7 @@ public class DistanceProvider {
 
     private DistanceProvider(){}
 
-    public static Double getDistance(XLocation location1, XLocation location2){
+    public static Double getDistance(CustomLocation location1, CustomLocation location2){
 
         double latitude1, latitude2;
         double distance;

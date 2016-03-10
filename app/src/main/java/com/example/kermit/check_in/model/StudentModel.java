@@ -1,12 +1,11 @@
 package com.example.kermit.check_in.model;
 
 import android.util.Log;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import com.example.kermit.check_in.App;
 import com.example.kermit.check_in.model.bean.Student;
-import com.example.kermit.check_in.model.bean.XLocation;
+import com.example.kermit.check_in.model.bean.CustomLocation;
 import com.example.kermit.check_in.utils.DistanceProvider;
 
 import cn.bmob.v3.listener.SaveListener;
@@ -41,7 +40,7 @@ public class StudentModel{
      * 签到
      * @param sLocation
      */
-    public void sign(XLocation sLocation){
+    public void sign(CustomLocation sLocation){
 
         mStudent = new Student();
 
@@ -49,13 +48,13 @@ public class StudentModel{
             Log.d(TAG, "sLocation is null!");
         }
 
-        if (mXLocationTeacher == null){
-            Log.d(TAG, "mXLocationTeacher is null!");
+        if (mCustomLocationTeacher == null){
+            Log.d(TAG, "mCustomLocationTeacher is null!");
         }
 
-        if (sLocation != null && mXLocationTeacher != null) {
-            Toast.makeText(App.getInstance(), DistanceProvider.getDistance(sLocation, mXLocationTeacher).toString(), Toast.LENGTH_SHORT).show();
-            if (DistanceProvider.getDistance(sLocation, mXLocationTeacher) < 250) {
+        if (sLocation != null && mCustomLocationTeacher != null) {
+            Toast.makeText(App.getInstance(), DistanceProvider.getDistance(sLocation, mCustomLocationTeacher).toString(), Toast.LENGTH_SHORT).show();
+            if (DistanceProvider.getDistance(sLocation, mCustomLocationTeacher) < 250) {
                 mStudent.setSign(true);
                 Toast.makeText(App.getInstance(), "签到成功!", Toast.LENGTH_SHORT).show();
             }else{
@@ -73,13 +72,13 @@ public class StudentModel{
     }
 
 
-    XLocation mXLocationTeacher;
+    CustomLocation mCustomLocationTeacher;
 
     /**
      * 用来从Message中获得位置信息
-     * @param xLocation
+     * @param customLocation
      */
-    public void getXLocation(XLocation xLocation) {
-        mXLocationTeacher = xLocation;
+    public void getCustomLocation(CustomLocation customLocation) {
+        mCustomLocationTeacher = customLocation;
     }
 }

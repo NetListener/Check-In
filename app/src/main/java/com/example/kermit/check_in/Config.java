@@ -68,6 +68,6 @@ public final class Config {
 
     public static final class TableName{
         public static final String MESSAGE = "Message";
-        public static final String XLOCATION = "XLocation";
+        public static final String CUSTOMLOCATION = "CustomLocation";
     }
 }

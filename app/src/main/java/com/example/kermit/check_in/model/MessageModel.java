@@ -6,7 +6,7 @@ import android.widget.Button;
 import com.example.kermit.check_in.App;
 import com.example.kermit.check_in.Config;
 import com.example.kermit.check_in.model.bean.Message;
-import com.example.kermit.check_in.model.bean.XLocation;
+import com.example.kermit.check_in.model.bean.CustomLocation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,14 +64,14 @@ public class MessageModel {
                 if (mBmobRealTimeData.ACTION_UPDATETABLE.equals(jsonObject.opt("action"))){
                     JSONObject data = jsonObject.optJSONObject("data");
                     try {
-                        XLocation xLocation =
-                                new XLocation(data.getDouble("lontitude"), data.getDouble("latitude"));
+                        CustomLocation customLocation =
+                                new CustomLocation(data.getDouble("lontitude"), data.getDouble("latitude"));
 
-                        if (xLocation != null){
+                        if (customLocation != null){
                             button.setEnabled(true);
                         }
 
-                        StudentModel.getInstance().getXLocation(xLocation);
+                        StudentModel.getInstance().getCustomLocation(customLocation);
 
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -1,16 +1,9 @@
 package com.example.kermit.check_in;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +15,10 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.location.LocationManagerBase;
 import com.example.kermit.check_in.model.MessageModel;
 import com.example.kermit.check_in.model.StudentModel;
 import com.example.kermit.check_in.model.bean.Student;
-import com.example.kermit.check_in.model.bean.XLocation;
+import com.example.kermit.check_in.model.bean.CustomLocation;
 
 /**
  * Created by kermit on 16/3/4.
@@ -40,7 +32,7 @@ public class StudentFragment extends Fragment {
 
     public static final String TAG = "StudentFragment";
 
-    private XLocation mXLocationS;
+    private CustomLocation mCustomLocationS;
 
     private AMapLocationClient mLocationClient;
     private AMapLocationListener mLocationListener;
@@ -53,8 +45,8 @@ public class StudentFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            mXLocationS = (XLocation) msg.obj;
-            showLocation(mXLocationS);
+            mCustomLocationS = (CustomLocation) msg.obj;
+            showLocation(mCustomLocationS);
         }
     };
 
@@ -72,8 +64,8 @@ public class StudentFragment extends Fragment {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 Message message = mHandler.obtainMessage();
-                mXLocationS = new XLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude());
-                message.obj =  mXLocationS;
+                mCustomLocationS = new CustomLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude());
+                message.obj = mCustomLocationS;
                 message.sendToTarget();
             }
         };
@@ -112,7 +104,7 @@ public class StudentFragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StudentModel.getInstance().sign(mXLocationS);
+                StudentModel.getInstance().sign(mCustomLocationS);
             }
         });
 
@@ -124,16 +116,10 @@ public class StudentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         MessageModel.getInstance().startListenDataChange(mButton);
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
     }
 
-    private void showLocation(XLocation location) {
-        mTextViewLontitude.setText(String.valueOf(location.getLontitude()));
+    private void showLocation(CustomLocation location) {
+        mTextViewLontitude.setText(String.valueOf(location.getLongitude()));
         mTextViewLatitude.setText(String.valueOf(location.getLatitude()));
     }
 }

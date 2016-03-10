@@ -13,7 +13,7 @@ import cn.bmob.v3.BmobObject;
 public class Message extends BmobObject{
 
     private String msg;
-    private XLocation mXLocation;
+    private CustomLocation mCustomLocation;
 
     public String getMsg() {
         return msg;
@@ -23,11 +23,11 @@ public class Message extends BmobObject{
         this.msg = msg;
     }
 
-    public XLocation getXLocation() {
-        return mXLocation;
+    public CustomLocation getCustomLocation() {
+        return mCustomLocation;
     }
 
-    public void setXLocation(XLocation XLocation) {
-        mXLocation = XLocation;
+    public void setCustomLocation(CustomLocation customLocation) {
+        mCustomLocation = customLocation;
     }
 }

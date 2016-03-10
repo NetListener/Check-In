@@ -1,16 +1,9 @@
 package com.example.kermit.check_in;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +17,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.kermit.check_in.model.TeacherModel;
 import com.example.kermit.check_in.model.bean.Teacher;
-import com.example.kermit.check_in.model.bean.XLocation;
+import com.example.kermit.check_in.model.bean.CustomLocation;
 
 /**
  * Created by kermit on 16/3/4.
@@ -41,7 +34,7 @@ public class TeacherFragment extends Fragment {
     private Button mButton;
     private TextView mLongtitudeTextView, mLatitudeTextView;
 
-    private XLocation mXLocation;
+    private CustomLocation mCustomLocation;
     public AMapLocationClient mLocationClient;
     public AMapLocationListener mLocationListener;
     public AMapLocationClientOption mLocationOption;
@@ -50,9 +43,9 @@ public class TeacherFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            XLocation xLocation = (XLocation) msg.obj;
+            CustomLocation customLocation = (CustomLocation) msg.obj;
             mButton.setEnabled(true);
-            showLocation(xLocation);
+            showLocation(customLocation);
         }
     };
 
@@ -70,10 +63,10 @@ public class TeacherFragment extends Fragment {
             public void onLocationChanged(AMapLocation aMapLocation) {
 
                 Message message = mHandler.obtainMessage();
-                mXLocation = new XLocation();
-                mXLocation.setLatitude(aMapLocation.getLatitude());
-                mXLocation.setLontitude(aMapLocation.getLongitude());
-                message.obj = mXLocation;
+                mCustomLocation = new CustomLocation();
+                mCustomLocation.setLatitude(aMapLocation.getLatitude());
+                mCustomLocation.setLongitude(aMapLocation.getLongitude());
+                message.obj = mCustomLocation;
                 message.sendToTarget();
 
             }
@@ -115,7 +108,7 @@ public class TeacherFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 TeacherModel.getInstance().setTeacher(new Teacher());
-                TeacherModel.getInstance().sendMessage("请签到!", mXLocation);
+                TeacherModel.getInstance().sendMessage("请签到!", mCustomLocation);
             }
         });
 
@@ -125,17 +118,10 @@ public class TeacherFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
     }
 
-    private void showLocation(XLocation location) {
-        mLongtitudeTextView.setText(String.valueOf(location.getLontitude()));
+    private void showLocation(CustomLocation location) {
+        mLongtitudeTextView.setText(String.valueOf(location.getLongitude()));
         mLatitudeTextView.setText(String.valueOf(location.getLatitude()));
     }
 }

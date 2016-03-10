@@ -8,10 +8,8 @@ import android.widget.Toast;
 import com.example.kermit.check_in.App;
 import com.example.kermit.check_in.model.bean.Message;
 import com.example.kermit.check_in.model.bean.Teacher;
-import com.example.kermit.check_in.model.bean.XLocation;
+import com.example.kermit.check_in.model.bean.CustomLocation;
 
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -43,16 +41,16 @@ public class TeacherModel {
         mTeacher = teacher;
     }
 
-    public void sendMessage(final String msg, XLocation xLocation){
+    public void sendMessage(final String msg, CustomLocation customLocation){
 
-        if (TextUtils.isEmpty(msg) || xLocation == null){
+        if (TextUtils.isEmpty(msg) || customLocation == null){
             return;
         }
 
         mMessage = new Message();
         mMessage.setMsg(msg);
-        mMessage.setXLocation(xLocation);
-        xLocation.save(mContext, new SaveListener() {
+        mMessage.setCustomLocation(customLocation);
+        customLocation.save(mContext, new SaveListener() {
             @Override
             public void onSuccess() {
                 mMessage.save(mContext, new SaveListener() {
